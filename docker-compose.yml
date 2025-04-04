@@ -14,6 +14,25 @@ services:
       - .env
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./init:/docker-entrypoint-initdb.d
+      - ./Init:/docker-entrypoint-initdb.d
 volumes:
   db_data:
+
+#
+#version: '3.8'
+#services:
+#  db:
+#    image: postgres:latest
+#    container_name: SQL-Generic
+#    restart: always
+#    environment:
+#      - POSTGRES_USER=${DB_USER}
+#      - POSTGRES_PASSWORD=${DB_PASSWORD}
+#      - POSTGRES_DB=${DB_NAME}
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - db_data:/var/lib/postgresql/data  # Persist data across restarts
+#      - ./init:/docker-entrypoint-initdb.d # Mount your SQL files to be run on startup
+#volumes:
+#  db_data:

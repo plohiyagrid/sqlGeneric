@@ -1,27 +1,34 @@
-CREATE TABLE continents (
-    continent_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+-- Drop tables if they exist to ensure clean creation
+DROP TABLE IF EXISTS citizenship;
+DROP TABLE IF EXISTS person;
+DROP TABLE IF EXISTS country;
+DROP TABLE IF EXISTS continent;
+
+-- Create table for continents
+CREATE TABLE continent (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE countries (
-    country_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    continent_id INT,
-    population BIGINT,
-    area BIGINT,
-    FOREIGN KEY (continent_id) REFERENCES continents(continent_id) ON DELETE CASCADE
+-- Create table for countries
+CREATE TABLE country (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    continent_id INTEGER NOT NULL REFERENCES continent(id),
+    area_sqkm NUMERIC(15, 2) NOT NULL CHECK (area_sqkm > 0)
 );
 
-CREATE TABLE people (
-    person_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    age INT
+-- Create table for people
+CREATE TABLE person (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    birthdate DATE
 );
 
-CREATE TABLE country_people (
-    country_id INT,
-    person_id INT,
-    PRIMARY KEY (country_id, person_id),
-    FOREIGN KEY (country_id) REFERENCES countries(country_id),
-    FOREIGN KEY (person_id) REFERENCES people(person_id)
+-- Create table for citizenship (many-to-many relationship between countries and people)
+CREATE TABLE citizenship (
+    person_id INTEGER NOT NULL REFERENCES person(id),
+    country_id INTEGER NOT NULL REFERENCES country(id),
+    PRIMARY KEY (person_id, country_id)
 );
+
